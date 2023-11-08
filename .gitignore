@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 build/
+*/**/dump.sql
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

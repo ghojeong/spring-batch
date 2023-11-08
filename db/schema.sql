@@ -1,0 +1,122 @@
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_CONTEXT`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_CONTEXT`;
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_PARAMS`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION`;
+DROP TABLE IF EXISTS `BATCH_JOB_INSTANCE`;
+
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_SEQ`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_SEQ`;
+DROP TABLE IF EXISTS `BATCH_JOB_SEQ`;
+
+CREATE TABLE `BATCH_JOB_SEQ`
+(
+    `ID`         int unsigned NOT NULL,
+    `UNIQUE_KEY` char(1)      NOT NULL,
+    UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+);
+INSERT INTO `BATCH_JOB_SEQ`
+VALUES (1, '0');
+
+CREATE TABLE `BATCH_JOB_EXECUTION_SEQ`
+(
+    `ID`         int unsigned NOT NULL,
+    `UNIQUE_KEY` char(1)      NOT NULL,
+    UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+);
+INSERT INTO `BATCH_JOB_EXECUTION_SEQ`
+VALUES (1, '0');
+
+CREATE TABLE `BATCH_STEP_EXECUTION_SEQ`
+(
+    `ID`         int unsigned NOT NULL,
+    `UNIQUE_KEY` char(1)      NOT NULL,
+    UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+);
+INSERT INTO `BATCH_STEP_EXECUTION_SEQ`
+VALUES (1, '0');
+
+CREATE TABLE `BATCH_JOB_INSTANCE`
+(
+    `JOB_INSTANCE_ID` int unsigned NOT NULL,
+    `VERSION`         int unsigned,
+    `JOB_NAME`        varchar(100) NOT NULL,
+    `JOB_KEY`         varchar(32)  NOT NULL,
+    PRIMARY KEY (`JOB_INSTANCE_ID`),
+    UNIQUE KEY `JOB_INST_UN` (`JOB_NAME`, `JOB_KEY`)
+);
+
+CREATE TABLE `BATCH_JOB_EXECUTION`
+(
+    `JOB_EXECUTION_ID`           int unsigned NOT NULL,
+    `VERSION`                    int unsigned,
+    `JOB_INSTANCE_ID`            int unsigned NOT NULL,
+    `CREATE_TIME`                datetime     NOT NULL,
+    `START_TIME`                 datetime,
+    `END_TIME`                   datetime,
+    `STATUS`                     varchar(10),
+    `EXIT_CODE`                  varchar(2500),
+    `EXIT_MESSAGE`               varchar(2500),
+    `LAST_UPDATED`               datetime,
+    `JOB_CONFIGURATION_LOCATION` varchar(2500),
+    PRIMARY KEY (`JOB_EXECUTION_ID`),
+    KEY `JOB_INST_EXEC_FK` (`JOB_INSTANCE_ID`),
+    CONSTRAINT `JOB_INST_EXEC_FK` FOREIGN KEY (`JOB_INSTANCE_ID`) REFERENCES `BATCH_JOB_INSTANCE` (`JOB_INSTANCE_ID`)
+);
+
+CREATE TABLE `BATCH_JOB_EXECUTION_PARAMS`
+(
+    `JOB_EXECUTION_ID` int unsigned NOT NULL,
+    `TYPE_CD`          varchar(6)   NOT NULL,
+    `KEY_NAME`         varchar(100) NOT NULL,
+    `STRING_VAL`       varchar(250),
+    `DATE_VAL`         datetime,
+    `LONG_VAL`         bigint,
+    `DOUBLE_VAL`       double,
+    `IDENTIFYING`      char(1)      NOT NULL,
+    KEY `JOB_EXEC_PARAMS_FK` (`JOB_EXECUTION_ID`),
+    CONSTRAINT `JOB_EXEC_PARAMS_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
+);
+
+CREATE TABLE `BATCH_STEP_EXECUTION`
+(
+    `STEP_EXECUTION_ID`  int unsigned NOT NULL,
+    `VERSION`            int unsigned NOT NULL,
+    `STEP_NAME`          varchar(100) NOT NULL,
+    `JOB_EXECUTION_ID`   int unsigned NOT NULL,
+    `START_TIME`         datetime     NOT NULL,
+    `END_TIME`           datetime,
+    `STATUS`             varchar(10),
+    `COMMIT_COUNT`       int unsigned,
+    `READ_COUNT`         int unsigned,
+    `FILTER_COUNT`       int unsigned,
+    `WRITE_COUNT`        int unsigned,
+    `READ_SKIP_COUNT`    int unsigned,
+    `WRITE_SKIP_COUNT`   int unsigned,
+    `PROCESS_SKIP_COUNT` int unsigned,
+    `ROLLBACK_COUNT`     int unsigned,
+    `EXIT_CODE`          varchar(2500),
+    `EXIT_MESSAGE`       varchar(2500),
+    `LAST_UPDATED`       datetime,
+    PRIMARY KEY (`STEP_EXECUTION_ID`),
+    KEY `JOB_EXEC_STEP_FK` (`JOB_EXECUTION_ID`),
+    CONSTRAINT `JOB_EXEC_STEP_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
+);
+
+CREATE TABLE `BATCH_JOB_EXECUTION_CONTEXT`
+(
+    `JOB_EXECUTION_ID`   int unsigned  NOT NULL,
+    `SHORT_CONTEXT`      varchar(2500) NOT NULL,
+    `SERIALIZED_CONTEXT` text,
+    PRIMARY KEY (`JOB_EXECUTION_ID`),
+    CONSTRAINT `JOB_EXEC_CTX_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
+);
+
+CREATE TABLE `BATCH_STEP_EXECUTION_CONTEXT`
+(
+    `STEP_EXECUTION_ID`  int unsigned  NOT NULL,
+    `SHORT_CONTEXT`      varchar(2500) NOT NULL,
+    `SERIALIZED_CONTEXT` text,
+    PRIMARY KEY (`STEP_EXECUTION_ID`),
+    CONSTRAINT `STEP_EXEC_CTX_FK` FOREIGN KEY (`STEP_EXECUTION_ID`) REFERENCES `BATCH_STEP_EXECUTION` (`STEP_EXECUTION_ID`)
+);
