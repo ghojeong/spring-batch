@@ -1,7 +1,8 @@
-DB_URL=localhost
-DB_PORT=12345
-DB_USER=root
-DB_PASSWORD=rootPassword
-DB_NAME=dfdb
+URL='-h localhost -P 12345 --protocol=tcp'
+USER=root
+PW=rootPassword
+DB=dfdb
+SCHEMA_SQL='./schema.sql'
 
-mysql --protocol=tcp -h $DB_URL -P $DB_PORT -u $DB_USER -p$DB_PASSWORD $DB_NAME < schema.sql
+mysql $URL -u $USER -p$PW $DB < $SCHEMA_SQL
+
