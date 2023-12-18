@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class SimpleJobConfiguration {
+public class SimpleJobConfig {
     private final static String JOB_NAME = "simpleJob";
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -34,7 +34,7 @@ public class SimpleJobConfiguration {
     public Step simpleStep1(@Value("#{jobParameters[requestDate]}") String requestDate) {
         return stepBuilderFactory.get("simpleStep1")
                 .tasklet(((contribution, chunkContext) -> {
-                    log.info(">>>>> This is Step1");
+                    log.info(">>>>> This is Simple Step1");
                     log.info(">>>>> requestDate = {}", requestDate);
                     return RepeatStatus.FINISHED;
                 })).build();
@@ -45,7 +45,7 @@ public class SimpleJobConfiguration {
     public Step simpleStep2(@Value("#{jobParameters[requestDate]}") String requestDate) {
         return stepBuilderFactory.get("simpleStep2")
                 .tasklet(((contribution, chunkContext) -> {
-                    log.info(">>>>> This is Step2");
+                    log.info(">>>>> This is Simple Step2");
                     log.info(">>>>> requestDate = {}", requestDate);
                     return RepeatStatus.FINISHED;
                 })).build();

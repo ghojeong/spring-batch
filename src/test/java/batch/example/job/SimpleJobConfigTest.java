@@ -1,31 +1,24 @@
 package batch.example.job;
 
-import batch.BatchApplicationTest;
-import org.junit.After;
+import batch.BatchTest;
+import batch.TestApplication;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
-import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// NOTE: https://www.baeldung.com/spring-batch-testing-job
-
-public class SimpleJobConfigurationTest implements BatchApplicationTest {
+@SpringBootTest(classes = {SimpleJobConfig.class, TestApplication.class})
+public class SimpleJobConfigTest implements BatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Autowired
-    private JobRepositoryTestUtils jobRepositoryTestUtils;
-
-    @After
-    public void cleanUp() {
-        jobRepositoryTestUtils.removeJobExecutions();
-    }
-
+    @DisplayName("simpleJob 의 JobParameter 정상 출력 확인")
     @Test
     public void simpleJob() throws Exception {
         // given
@@ -41,5 +34,4 @@ public class SimpleJobConfigurationTest implements BatchApplicationTest {
         assertThat(jobExecution.getStatus())
                 .isEqualTo(BatchStatus.COMPLETED);
     }
-
 }
