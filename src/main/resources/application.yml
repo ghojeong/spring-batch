@@ -3,6 +3,7 @@ spring:
     jdbc:
       initialize-schema: never
   jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: false
     properties:
       hibernate:

@@ -1,5 +1,7 @@
 spring:
   jpa:
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     properties:
       hibernate:
