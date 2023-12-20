@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  db:
+    image: dfdb:1.0
+    platform: linux/x86_64
+    container_name: dfdb-1.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dfdb
+    ports:
+      - "12345:3306"
+    restart: always
+#   jenkins:
+#     image: jenkins/jenkins:lts
+#     container_name: jenkins
+#     volumes:
+#       - ./jenkins:/var/jenkins_home
+#     ports:
+#       - "8080:8080"
+
