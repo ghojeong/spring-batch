@@ -1,4 +1,4 @@
-package batch.example.job;
+package batch.job;
 
 import batch.BatchTest;
 import batch.TestApplication;

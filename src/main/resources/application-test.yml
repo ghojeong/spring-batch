@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   jpa:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
@@ -16,16 +18,3 @@ spring:
   h2:
     console:
       enabled: true
-management:
-  info:
-    git:
-      mode: full
-    java:
-      enabled: true
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: "*"
