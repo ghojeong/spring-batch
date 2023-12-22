@@ -1,5 +1,6 @@
 package batch.job;
 
+import batch.domain.version.VersionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +22,14 @@ public class SimpleJobConfig {
     private final static String JOB_NAME = "simpleJob";
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final VersionRepository versionRepository;
 
     @Bean
     public Job simpleJob() {
         return jobBuilderFactory.get(JOB_NAME)
                 .start(simpleStep1(null))
                 .next(simpleStep2(null))
+                .incrementer(new RunIdIncrementer())
                 .build();
     }
 
@@ -37,7 +41,8 @@ public class SimpleJobConfig {
                     log.info(">>>>> This is Simple Step1");
                     log.info(">>>>> requestDate = {}", requestDate);
                     return RepeatStatus.FINISHED;
-                })).build();
+                }))
+                .build();
     }
 
     @Bean
@@ -47,7 +52,9 @@ public class SimpleJobConfig {
                 .tasklet(((contribution, chunkContext) -> {
                     log.info(">>>>> This is Simple Step2");
                     log.info(">>>>> requestDate = {}", requestDate);
+                    log.info("Version: {}", versionRepository.findAll());
                     return RepeatStatus.FINISHED;
-                })).build();
+                })).allowStartIfComplete(true)
+                .build();
     }
 }

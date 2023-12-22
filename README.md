@@ -29,4 +29,8 @@ docker-compose up -d
 
 # 젠킨스 초기 비밀번호 확인
 docker logs -f jenkins
+
+# Jenkins 를 위한 메모리 설정
+sudo vim /etc/default/jenkins
+# JAVA_ARGS="-Djava.awt.headless=true -Xmx4096m -XX:MaxPermSize=2048m"
 ```

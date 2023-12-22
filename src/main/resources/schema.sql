@@ -1,3 +1,4 @@
+-- >> Spring Batch
 DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_CONTEXT`;
 DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_CONTEXT`;
 DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION`;
@@ -92,3 +93,21 @@ CREATE TABLE `BATCH_STEP_EXECUTION_CONTEXT`
     `SERIALIZED_CONTEXT` text,
     CONSTRAINT `STEP_EXEC_CTX_FK` FOREIGN KEY (`STEP_EXECUTION_ID`) REFERENCES `BATCH_STEP_EXECUTION` (`STEP_EXECUTION_ID`)
 );
+-- << Spring Batch
+
+-- >> Version
+DROP TABLE IF EXISTS `version`;
+CREATE TABLE `version`
+(
+    `version_target` VARCHAR(50)  NOT NULL,
+    `version_number` INT UNSIGNED NOT NULL,
+    `version_name`   VARCHAR(20)  NOT NULL,
+    `update_status`  VARCHAR(10)  NOT NULL DEFAULT 'NONE',
+    `created_at`     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `creator`        VARCHAR(250),
+    `updater`        VARCHAR(250),
+    PRIMARY KEY (`version_target`, `version_number`),
+    UNIQUE (`version_target`, `version_name`)
+);
+-- << Version

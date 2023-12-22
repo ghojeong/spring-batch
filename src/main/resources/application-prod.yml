@@ -14,7 +14,13 @@ spring:
         use_sql_comments: true
         ddl-auto: none
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    primary:
+      jdbc-url: ${PRIMARY_DATASOURCE_URL}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${PRIMARY_DATASOURCE_USERNAME}
+      password: ${PRIMARY_DATASOURCE_PASSWORD}
+    batch:
+      jdbc-url: ${BATCH_DATASOURCE_URL}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${BATCH_DATASOURCE_USERNAME}
+      password: ${BATCH_DATASOURCE_PASSWORD}
