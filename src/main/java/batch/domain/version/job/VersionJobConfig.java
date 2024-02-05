@@ -11,11 +11,8 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDateTime;
 
 @Slf4j
 @Configuration
@@ -29,18 +26,17 @@ public class VersionJobConfig {
     @Bean
     public Job versionJob() {
         return jobBuilderFactory.get(JOB_NAME)
-                .start(versionStep(LocalDateTime.now().toString()))
+                .start(versionStep())
                 .incrementer(new RunIdIncrementer())
                 .build();
     }
 
     @Bean
     @JobScope
-    public Step versionStep(@Value("#{jobParameters[requestDate]}") String requestDate) {
-        return stepBuilderFactory.get("simpleStep1")
+    public Step versionStep() {
+        return stepBuilderFactory.get("versionStep")
                 .tasklet(((contribution, chunkContext) -> {
                     log.info(">>>>> This is Version Job");
-                    log.info(">>>>> requestDate = {}", requestDate);
                     log.info("Version: {}", versionRepository.findAll());
                     return RepeatStatus.FINISHED;
                 }))
