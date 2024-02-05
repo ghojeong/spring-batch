@@ -1,4 +1,4 @@
-package batch.domain.version;
+package batch.domain.version.repository;
 
 import batch.domain.version.entity.Version;
 import batch.domain.version.entity.VersionPK;
